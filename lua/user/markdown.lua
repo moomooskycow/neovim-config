@@ -1,22 +1,6 @@
 local M = {}
 
 function M.setup()
-	-- vim-markdown config
-	vim.g.vim_markdown_folding_disabled = true
-	
-	-- Using pcall to check for parser without triggering installation
-	local ts_ok = pcall(function()
-		-- Use non-deprecated way to check parser availability
-		local parsers = require("nvim-treesitter.parsers")
-		return parsers.has_parser("markdown")
-	end)
-	
-	if not ts_ok then
-		-- If TreeSitter parser is not available, use only vim-markdown
-		-- Don't show notification every time - it's annoying
-		return
-	end
-
 	-- render-markdown.nvim config
 	local status_ok, render_markdown = pcall(require, "render-markdown")
 	if not status_ok then
@@ -24,8 +8,7 @@ function M.setup()
 	end
 
 	render_markdown.setup({
-		-- Disable markdown rendering by default - only activate via keymapping
-		enabled = false,
+		enabled = true, -- plugin only loads on explicit :RenderMarkdown or <leader>mr
 		-- Render in normal, command, and terminal modes
 		render_modes = { "n", "c", "t" },
 		-- Don't try to render files larger than 10MB

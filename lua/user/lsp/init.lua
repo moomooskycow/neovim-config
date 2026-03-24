@@ -34,6 +34,7 @@ function M.setup()
 			"bashls",
 			"pyright",
 			"jsonls",
+			"marksman",
 		},
 	})
 
@@ -48,6 +49,9 @@ function M.setup()
 		["lua_ls"] = require("user.lsp.settings.lua_ls"),
 		["jsonls"] = require("user.lsp.settings.jsonls"),
 		["rust_analyzer"] = {},
+		["bashls"] = {
+			filetypes = { "sh", "bash" }, -- Exclude .env files by only including sh and bash
+		},
 	}
 
 	mason_lspconfig.setup_handlers({

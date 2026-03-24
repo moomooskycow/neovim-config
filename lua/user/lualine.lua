@@ -106,7 +106,7 @@ M.setup = function()
 			hint = "󰌵 ",
 		},
 		colored = true,
-		update_in_insert = true,
+		update_in_insert = false,
 		always_visible = false,
 		padding = { left = 1, right = 1 },
 	}
@@ -286,6 +286,21 @@ M.setup = function()
 		cond = hide_in_width,
 	}
 
+	-- Word count for markdown/text files
+	local wordcount = {
+		function()
+			local wc = vim.fn.wordcount()
+			if wc.visual_words then
+				return wc.visual_words .. "w sel"
+			end
+			return wc.words .. "w"
+		end,
+		cond = function()
+			return vim.tbl_contains({ "markdown", "text" }, vim.bo.filetype)
+		end,
+		padding = { left = 1, right = 1 },
+	}
+
 	-- File size with fancy formatting
 	local filesize = {
 		function()
@@ -316,19 +331,19 @@ M.setup = function()
 			theme = bubble_theme,
 			component_separators = { left = "", right = "" },
 			section_separators = { left = "", right = "" },
-			disabled_filetypes = { "alpha", "dashboard", "Outline", "markdown", "fzf", "TelescopePrompt" },
+			disabled_filetypes = { "alpha", "dashboard", "Outline", "fzf", "TelescopePrompt" },
 			globalstatus = true,
 			refresh = {
-				statusline = 100,
-				tabline = 100,
-				winbar = 100,
+				statusline = 1000,
+				tabline = 1000,
+				winbar = 1000,
 			},
 		},
 		sections = {
 			lualine_a = { mode },
 			lualine_b = { filename }, -- moved filename to section B for more prominence
 			lualine_c = { branch, diff }, -- moved these to section C
-			lualine_x = { filesize, filetype }, -- removed encoding and fileformat to save space
+			lualine_x = { wordcount, filesize, filetype }, -- removed encoding and fileformat to save space
 			lualine_y = { diagnostics, lsp_status }, -- removed clock to save space
 			lualine_z = { location, progress },
 		},

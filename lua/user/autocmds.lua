@@ -1,55 +1,32 @@
 local M = {}
 
 function M.setup()
-	-- better formatting for text editing
-	-- markdown files
-	-- NOTE: vim doesn't know *.md files are markdown files
-	-- so we have to use VimEnter on the glob pattern
-	-- instead of FileType = markdown
-	vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-		pattern = "*.md",
-		callback = function()
-			vim.api.nvim_exec(
-				[[
-					nnoremap j gj
-					nnoremap k gk
-					setlocal wrap linebreak nolist cursorline!
-			        ]],
-				false
-			)
-		end,
-	})
-
 	-- disable supermaven when in markdown files
+	local supermaven_api -- cache to avoid repeated require
 	vim.api.nvim_create_autocmd("BufEnter", {
 		pattern = "*.md",
 		callback = function()
-			local api_ok, api = pcall(require, "supermaven-nvim.api")
-			if api_ok and api.is_running() then
-				vim.api.nvim_exec([[ SupermavenStop ]], false)
+			if supermaven_api == nil then
+				local ok, api = pcall(require, "supermaven-nvim.api")
+				supermaven_api = ok and api or false
 			end
-		end,
-	})
-
-	vim.api.nvim_create_autocmd("VimEnter", {
-		pattern = "*.md",
-		callback = function()
-			vim.api.nvim_exec([[ Goyo ]], false)
+			if supermaven_api and supermaven_api.is_running() then
+				vim.cmd("SupermavenStop")
+			end
 		end,
 	})
 
 	-- text files
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "text",
-		command = "setlocal wrap linebreak nolist cursorline!",
+		command = "setlocal wrap linebreak nolist",
 	})
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "text",
-		command = "nnoremap j gj",
-	})
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "text",
-		command = "nnoremap k gk",
+		callback = function()
+			vim.keymap.set("n", "j", "gj", { buffer = true })
+			vim.keymap.set("n", "k", "gk", { buffer = true })
+		end,
 	})
 
 	-- remove trailing whitespace
@@ -58,15 +35,6 @@ function M.setup()
 		command = [[%s/\s\+$//e]],
 	})
 
-	-- toggle lualine with Goyo
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "GoyoEnter",
-		command = [[lua require'lualine'.hide()]],
-	})
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "GoyoLeave",
-		command = [[lua require'lualine'.hide({ unhide=true })]],
-	})
 
 	-- Autocommands for Lua and Rust files
 	vim.api.nvim_create_autocmd("BufWritePre", {
@@ -111,6 +79,14 @@ function M.setup()
 				vim.bo.filetype = "typescriptreact"
 				vim.notify("Changed filetype to typescriptreact", vim.log.levels.INFO)
 			end
+		end,
+	})
+	
+	-- Set .env files to use 'conf' filetype to avoid bash LSP warnings
+	vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+		pattern = "*.env*",
+		callback = function()
+			vim.bo.filetype = "conf"
 		end,
 	})
 end

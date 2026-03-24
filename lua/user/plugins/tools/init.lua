@@ -18,7 +18,7 @@ return {
 			keys = "etovxqpdygfblzhckisuran",
 		},
 	},
-	
+
 	-- terminal integration
 	{
 		"akinsho/toggleterm.nvim",
@@ -27,7 +27,7 @@ return {
 			require("user.toggleterm").setup()
 		end,
 	},
-	
+
 	-- git integration
 	{
 		"lewis6991/gitsigns.nvim",
@@ -37,7 +37,7 @@ return {
 		end,
 	},
 	{ "tpope/vim-fugitive", cmd = { "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } },
-	
+
 	-- vim sugar for unix shell commands
-	{ "tpope/vim-eunuch", cmd = { "Rename", "Move", "Delete", "Mkdir", "Chmod", "SudoWrite" } },
+	{ "tpope/vim-eunuch",   cmd = { "Rename", "Move", "Delete", "Mkdir", "Chmod", "SudoWrite" } }
 }

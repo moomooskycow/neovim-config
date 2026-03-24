@@ -4,14 +4,9 @@ function M.setup()
 	-- Enable true color support
 	vim.opt.termguicolors = true
 
-	-- Get the current hour (0-23)
-	local current_hour = os.date("*t").hour
-
-	-- Determine theme mode based on time of day
-	_G.current_theme_mode = (current_hour >= 6 and current_hour < 19) and "light" or "dark"
-
-	-- Set background before colorscheme to avoid flicker
-	vim.opt.background = _G.current_theme_mode
+	-- Always dark mode
+	_G.current_theme_mode = "dark"
+	vim.opt.background = "dark"
 
 	-- Apply the colorscheme
 	M.apply_colorscheme()

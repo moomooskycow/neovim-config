@@ -68,14 +68,38 @@ function M.setup()
 	keymap("n", "<leader>td", "<CMD>TroubleToggle document_diagnostics<CR>", opts)
 	keymap("n", "<leader>tw", "<CMD>TroubleToggle workspace_diagnostics<CR>", opts)
 
-	-- goyo (distraction-free writing)
-	keymap("n", "<leader>gy", "<CMD>Goyo<CR>", opts)
+	-- zen mode (distraction-free writing)
+	keymap("n", "<leader>gy", "<CMD>ZenMode<CR>", opts)
+
+	-- delete current file with confirmation
+	keymap("n", "<leader>fd", "<CMD>lua require('user.keymappings').delete_current_file()<CR>", opts)
 
 	-- typescript tools
 	keymap("n", "<leader>to", "<CMD>TSToolsOrganizeImports<CR>", opts)
 	keymap("n", "<leader>ta", "<CMD>TSToolsAddMissingImports<CR>", opts)
 	-- Add debug commands for TypeScript
 	keymap("n", "<leader>tl", "<CMD>LspInfo<CR>", opts)
+end
+
+function M.delete_current_file()
+	local current_file = vim.fn.expand("%:p")
+	if current_file == "" then
+		vim.notify("No file in current buffer", vim.log.levels.WARN)
+		return
+	end
+
+	local choice = vim.fn.confirm("Delete file: " .. current_file .. "?", "&Yes\n&No", 2)
+	if choice == 1 then
+		local ok, err = pcall(function()
+			vim.cmd("bdelete!")
+			os.remove(current_file)
+		end)
+		if ok then
+			vim.notify("File deleted: " .. current_file, vim.log.levels.INFO)
+		else
+			vim.notify("Failed to delete file: " .. (err or "unknown error"), vim.log.levels.ERROR)
+		end
+	end
 end
 
 return M

@@ -62,20 +62,47 @@ return {
 	-- Golang
 	{ "ray-x/go.nvim",          ft = "go" },
 
-	-- Markdown
-	{ "preservim/vim-markdown", ft = "markdown" },
+	-- Markdown: render-markdown loads only on explicit toggle, not on ft
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
-			"kyazdani42/nvim-web-devicons"
+			"kyazdani42/nvim-web-devicons",
 		},
-		ft = "markdown",
+		cmd = { "RenderMarkdown" },
+		keys = {
+			{ "<leader>mr", "<cmd>RenderMarkdown toggle<CR>", ft = "markdown", desc = "Toggle Markdown Rendering" },
+		},
 		config = function()
-			-- We no longer configure TreeSitter here to avoid reinstallation
-			-- Just load markdown config directly
 			require("user.markdown").setup()
 		end,
+	},
+	-- markdown-preview: cmd-only, no ft trigger (node.js process)
+	{
+		"iamcco/markdown-preview.nvim",
+		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+		build = function() vim.fn["mkdp#util#install"]() end,
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+			vim.g.mkdp_theme = "dark"
+		end,
+	},
+	{
+		"tadmccorkle/markdown.nvim",
+		ft = "markdown",
+		opts = {
+			mappings = {
+				go_curr_heading = false,
+				go_parent_heading = false,
+			},
+		},
+		keys = {
+			{ "]]", "<cmd>MDNextHeading<CR>", ft = "markdown", desc = "Next heading" },
+			{ "[[", "<cmd>MDPrevHeading<CR>", ft = "markdown", desc = "Prev heading" },
+			{ "<leader>mt", "<cmd>MDTaskToggle<CR>", ft = "markdown", desc = "Toggle checkbox" },
+			{ "<leader>mf", "<cmd>MDTableFormat<CR>", ft = "markdown", desc = "Format table" },
+			{ "<leader>mi", "<cmd>MDToc<CR>", ft = "markdown", desc = "Insert TOC" },
+		},
 	},
 }
 

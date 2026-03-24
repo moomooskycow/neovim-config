@@ -48,5 +48,31 @@ return {
 	{ "tpope/vim-surround", event = "BufReadPost" },
 	
 	-- distraction-free writing
-	{ "junegunn/goyo.vim", cmd = "Goyo" },
+	{
+		"folke/zen-mode.nvim",
+		cmd = "ZenMode",
+		opts = {
+			window = {
+				width = 80,
+				options = {
+					number = false,
+					relativenumber = false,
+					signcolumn = "no",
+					cursorline = false,
+				},
+			},
+			plugins = {
+				twilight = { enabled = false },
+				gitsigns = { enabled = false },
+			},
+		},
+	},
+	{
+		"folke/twilight.nvim",
+		cmd = "Twilight",
+		opts = {
+			dimming = { alpha = 0.25 },
+			context = 10,
+		},
+	},
 }

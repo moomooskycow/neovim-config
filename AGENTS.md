@@ -1,50 +1,30 @@
 # Neovim Configuration Guidelines
 
+Markdown-only writing kit. Raw view, Ember light default, Goyo auto.
+
 ## Commands
-- **Format/Lint**: Handled by LSP/null-ls (automatic)
-- **Test**: Tests run through specific language commands (e.g., `go test`)
-- **LSP**: Mason manages LSPs - `:Mason` to install/manage servers
+- **Plugins**: lazy.nvim (`:Lazy`)
+- **Treesitter**: markdown, markdown_inline, yaml, html, lua (main branch, 0.12 compat)
+- **Render**: none — conceallevel=0, showbreak="", list=false
 
-## Style Guidelines
-- **Lua Format**: Indent with tabs, max line length ~100 chars
-- **Imports**: Group by category (core vim, then plugins)
-- **Error Handling**: Use `pcall` for safe requiring of modules
-- **Naming**: Use `snake_case` for variables/functions
-- **Module Structure**: One feature per file in `lua/user/` directory
-- **Plugin Config**: Use lazy.nvim spec format with explicit dependencies
-- **Keymappings**: Use `vim.keymap.set()` with `{noremap=true, silent=true}`
-- **Colors**: Theme switching via `<leader>th` between light/dark modes
+## Style
+- Lua: tabs, ~100 cols, snake_case
+- Modules: lua/user/* — keep minimal
+- Keymaps: vim.keymap.set() silent/noremap
+- Theme: Ember / Ember Dawn (colors/ember.lua); system dark detection via defaults read; toggle <leader>th
+- Goyo: width 80, linenr 0, auto-enter on markdown (FileType + BufReadPost *.md + VimEnter), toggle <leader>z
 
-## Repository Organization
-- `init.lua`: Main entry point, requires all modules
-- `lua/user/`: Contains all configuration modules by feature
+## Layout
+- init.lua — loader
+- lua/user/options.lua — raw, light, no glyphs
+- lua/user/keymaps.lua — Goyo + Ember light/dark toggle
+- lua/user/plugins.lua — 11-plugin kit
+- after/ftplugin/markdown.lua — raw prose
 
-## Development Principles
+## Scope
+- Keep only raw markdown reading/writing aids
+- Reject rendered plugins, conceal, LSP, completion, AI, heavy UI
+- Prefer Goyo, soft wrap, raw, telescope, oil
 
-### Commits
-- **Conventional Commits**: Use structured messages (`feat:`, `fix:`, `docs:`, `chore:`)
-- **Atomic Changes**: Each commit should contain exactly one logical change
-
-### Logging & Observability
-- Implement structured logging where applicable
-- Include detailed logs during development for easier troubleshooting
-
-### Architecture & Design
-- **Modularity**: Embrace loose coupling for maintainability
-- **Error Handling**: Prioritize explicit error handling with meaningful messages
-- **Separation of Concerns**: Keep business logic separate from infrastructure
-
-### Documentation
-- Document the **why** behind design decisions
-- Keep documentation close to the code in markdown format
-- Update documentation as part of completing any change
-
-### Performance & Security
-- Establish performance baselines for critical operations
-- Assume all inputs could be hostile; build with secure defaults
-- Regularly scan dependencies for vulnerabilities
-
-### Continuous Improvement
-- Regularly review code for improvement opportunities
-- Treat technical debt as real debt—actively manage and reduce it
-- Foster a culture that values learning from controlled failures
+## Principles
+- Conventional Commits, atomic, simplicity first — delete before adding

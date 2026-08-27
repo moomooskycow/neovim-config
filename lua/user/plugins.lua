@@ -78,7 +78,7 @@ require("lazy").setup({
 				if #vim.api.nvim_list_uis() == 0 then
 					return
 				end
-				if vim.g.goyo_master then
+				if vim.t.goyo_master then
 					return
 				end
 				if vim.bo.filetype ~= "markdown" then
@@ -91,7 +91,7 @@ require("lazy").setup({
 					return
 				end
 				vim.defer_fn(function()
-					if vim.g.goyo_master then
+					if vim.t.goyo_master then
 						return
 					end
 					if vim.bo.filetype == "markdown" then

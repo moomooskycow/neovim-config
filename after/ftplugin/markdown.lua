@@ -21,3 +21,15 @@ opt.formatoptions:remove({ "t", "c" })
 opt.statusline = " %f %m  %=%{wordcount().words}w  %l:%c "
 
 vim.bo.commentstring = "<!-- %s -->"
+
+vim.api.nvim_buf_create_user_command(0, "MDTableFormat", function()
+	require("user.table").format()
+end, { desc = "Format markdown table under cursor" })
+
+vim.api.nvim_buf_create_user_command(0, "MDNextHeading", function()
+	require("markdown.nav").next_heading()
+end, { desc = "Go to next heading" })
+
+vim.api.nvim_buf_create_user_command(0, "MDPrevHeading", function()
+	require("markdown.nav").prev_heading()
+end, { desc = "Go to previous heading" })

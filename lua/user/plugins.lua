@@ -53,7 +53,19 @@ require("lazy").setup({
 			ts.setup({
 				install_dir = vim.fn.stdpath("data") .. "/site",
 			})
-			ts.install({ "markdown", "markdown_inline", "yaml", "html", "lua" })
+			local installed = {}
+			for _, lang in ipairs(ts.get_installed()) do
+				installed[lang] = true
+			end
+			local to_install = {}
+			for _, lang in ipairs({ "markdown", "markdown_inline", "yaml", "html", "lua" }) do
+				if not installed[lang] then
+					table.insert(to_install, lang)
+				end
+			end
+			if #to_install > 0 then
+				ts.install(to_install)
+			end
 
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = { "markdown", "lua", "yaml", "html" },

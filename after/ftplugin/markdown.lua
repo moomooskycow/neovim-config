@@ -17,14 +17,13 @@ opt.concealcursor = ""
 opt.textwidth = 0
 opt.colorcolumn = ""
 opt.foldenable = true
-opt.foldmethod = "expr"
-opt.foldexpr = "v:lua.MarkdownFrontmatterFold(v:lnum)"
+opt.foldmethod = "manual"
 opt.foldlevel = 0
 opt.foldminlines = 0
 opt.foldtext = [['---']]
 opt.foldcolumn = "0"
 opt.formatoptions:remove({ "t", "c" })
-opt.statusline = "  %f %m  %=%{wordcount().words} words   %l:%c  "
+opt.statusline = "  %f %m  %=%{get(b:,'md_words','0')} words   %l:%c  "
 
 vim.bo.commentstring = "<!-- %s -->"
 
@@ -43,53 +42,43 @@ local function frontmatter_end()
 	return 0
 end
 
-function MarkdownFrontmatterFold(lnum)
-	local last = vim.b.md_fm_end
-	if last == nil then
-		last = frontmatter_end()
-		vim.b.md_fm_end = last
-	end
-	if last > 0 and lnum <= last then
-		return "1"
-	end
-	return "0"
-end
 
 local function apply_frontmatter_fold()
-	vim.b.md_fm_end = nil
-	vim.opt_local.foldmethod = "expr"
-	vim.opt_local.foldexpr = "v:lua.MarkdownFrontmatterFold(v:lnum)"
-	vim.opt_local.foldenable = true
-	vim.opt_local.foldlevel = 0
-	vim.opt_local.foldminlines = 0
-	vim.opt_local.foldtext = [['---']]
-	vim.opt_local.foldcolumn = "0"
 	local last = frontmatter_end()
-	vim.b.md_fm_end = last
-	if last > 0 and vim.api.nvim_win_get_cursor(0)[1] == 1 then
-		local target = last + 1
-		local count = vim.api.nvim_buf_line_count(0)
-		while target <= count do
-			local line = vim.api.nvim_buf_get_lines(0, target - 1, target, false)[1]
-			if line ~= "" then
-				break
+	if last > 0 then
+		vim.opt_local.foldenable = true
+		vim.opt_local.foldmethod = "manual"
+		vim.opt_local.foldtext = [['---']]
+		vim.opt_local.foldcolumn = "0"
+		pcall(vim.cmd, "silent! 1," .. last .. "fold")
+		pcall(vim.cmd, "silent! 1foldclose")
+
+		if vim.api.nvim_win_get_cursor(0)[1] == 1 then
+			local target = last + 1
+			local count = vim.api.nvim_buf_line_count(0)
+			while target <= count do
+				local line = vim.api.nvim_buf_get_lines(0, target - 1, target, false)[1]
+				if line ~= "" then
+					break
+				end
+				target = target + 1
 			end
-			target = target + 1
-		end
-		if target <= count then
-			vim.api.nvim_win_set_cursor(0, { target, 0 })
+			if target <= count then
+				vim.api.nvim_win_set_cursor(0, { target, 0 })
+			end
 		end
 	end
 end
 
 local function toggle_frontmatter_fold()
-	if frontmatter_end() == 0 then
+	local last = frontmatter_end()
+	if last == 0 then
 		return
 	end
 	if vim.fn.foldclosed(1) == -1 then
-		vim.cmd("1foldclose")
+		pcall(vim.cmd, "silent! 1foldclose")
 	else
-		vim.cmd("1foldopen")
+		pcall(vim.cmd, "silent! 1foldopen!")
 	end
 end
 
@@ -99,10 +88,20 @@ vim.api.nvim_buf_create_user_command(0, "MDFrontmatter", toggle_frontmatter_fold
 
 apply_frontmatter_fold()
 
-vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "TextChangedI" }, {
-	buffer = 0,
+local function update_wordcount()
+	local wc = vim.fn.wordcount()
+	vim.b.md_words = wc.words or 0
+end
+
+update_wordcount()
+
+local buf = vim.api.nvim_get_current_buf()
+local group = vim.api.nvim_create_augroup("MarkdownPerf_" .. buf, { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+	group = group,
+	buffer = buf,
 	callback = function()
-		vim.b.md_fm_end = nil
+		update_wordcount()
 	end,
 })
 

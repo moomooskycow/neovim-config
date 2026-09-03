@@ -5,7 +5,7 @@ Markdown-only writing kit. Raw view, Ember light default, Goyo auto.
 ## Commands
 - **Plugins**: lazy.nvim (`:Lazy`)
 - **Treesitter**: markdown, markdown_inline, yaml, html, lua (main branch, 0.12 compat)
-- **Render**: none — conceallevel=0, showbreak="", list=false. YAML frontmatter folds closed on open (za to peek).
+- **Render**: none — conceallevel=0, showbreak="", list=false. YAML frontmatter folds closed on open (`<leader>fy` / `:MDFrontmatter` to peek).
 
 ## Style
 - Lua: tabs, ~100 cols, snake_case

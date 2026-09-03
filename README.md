@@ -32,6 +32,7 @@ Raw markdown with Omawrite/iA Writer typographic polish. No conceal. No newline 
 | `<leader>th` | Toggle dark/light theme |
 | `<leader>tw` | Toggle typewriter mode (centered cursor) |
 | `<leader>ms` | Show document stats (word count, reading time) |
+| `<leader>fy` | Toggle YAML frontmatter fold (`:MDFrontmatter`) |
 | `<leader>ff` / `<leader><leader>` | Find files |
 | `<leader>fg` | Live grep |
 | `<leader>fb` | Buffers |
@@ -49,7 +50,7 @@ Raw markdown with Omawrite/iA Writer typographic polish. No conceal. No newline 
 
 - Opens markdown -> auto Goyo (80 cols, centered, seamless background, no line numbers)
 - Raw view: `conceallevel=0`, `showbreak=""`, `list=false` — clean raw text
-- YAML frontmatter folds closed on open so writing starts at the title. `za` on the fold line peeks; file stays raw (no conceal)
+- YAML frontmatter folds closed on open so writing starts at the title. `<leader>fy` toggles it from anywhere; `za` only works on the fold line. File stays raw (no conceal)
 - Word count and cursor position in minimal statusline
 - Smart return in lists: pressing `<CR>` continues `- `, `* `, `1. `, or `> `; pressing `<CR>` on an empty item clears the bullet cleanly
 ## Layout

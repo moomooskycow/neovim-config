@@ -82,6 +82,21 @@ local function apply_frontmatter_fold()
 	end
 end
 
+local function toggle_frontmatter_fold()
+	if frontmatter_end() == 0 then
+		return
+	end
+	if vim.fn.foldclosed(1) == -1 then
+		vim.cmd("1foldclose")
+	else
+		vim.cmd("1foldopen")
+	end
+end
+
+vim.api.nvim_buf_create_user_command(0, "MDFrontmatter", toggle_frontmatter_fold, {
+	desc = "Toggle YAML frontmatter fold",
+})
+
 apply_frontmatter_fold()
 
 vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "TextChangedI" }, {
@@ -285,3 +300,4 @@ vim.keymap.set("n", "<leader>mk", smart_link, { buffer = true, desc = "Insert li
 vim.keymap.set("v", "<leader>mk", smart_link, { buffer = true, desc = "Wrap selection as link" })
 vim.keymap.set("n", "<leader>tw", toggle_typewriter, { buffer = true, desc = "Toggle typewriter mode" })
 vim.keymap.set("n", "<leader>ms", "<cmd>MDStats<CR>", { buffer = true, desc = "Show document stats" })
+vim.keymap.set("n", "<leader>fy", toggle_frontmatter_fold, { buffer = true, desc = "Toggle frontmatter fold" })

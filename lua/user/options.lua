@@ -57,7 +57,6 @@ opt.conceallevel = 0
 opt.concealcursor = ""
 opt.formatoptions = "jcroql"
 opt.spell = false
-opt.spelllang = { "en_us" }
 
 -- folds off
 opt.foldenable = false

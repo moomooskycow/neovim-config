@@ -32,7 +32,6 @@ Raw markdown with Omawrite/iA Writer typographic polish. No conceal. No newline 
 | `<leader>th` | Toggle dark/light theme |
 | `<leader>tw` | Toggle typewriter mode (centered cursor) |
 | `<leader>ms` | Show document stats (word count, reading time) |
-| `<leader>ss` | Toggle spell |
 | `<leader>ff` / `<leader><leader>` | Find files |
 | `<leader>fg` | Live grep |
 | `<leader>fb` | Buffers |

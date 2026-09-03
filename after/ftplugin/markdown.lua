@@ -3,7 +3,6 @@
 local opt = vim.opt_local
 
 opt.spell = false
-opt.spelllang = { "en_us" }
 opt.wrap = true
 opt.linebreak = true
 opt.breakindent = true

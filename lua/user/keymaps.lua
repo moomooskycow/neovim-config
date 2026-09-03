@@ -62,10 +62,6 @@ map("n", "<leader>th", function()
 	vim.cmd.colorscheme("ember")
 	vim.notify("Theme: " .. bg .. " (ember " .. (bg == "light" and "dawn" or "ink") .. ")", vim.log.levels.INFO)
 end, { desc = "Toggle light/dark" })
-map("n", "<leader>ss", function()
-	vim.opt_local.spell = not vim.opt_local.spell:get()
-	vim.notify("Spell: " .. (vim.opt_local.spell:get() and "on" or "off"), vim.log.levels.INFO)
-end, { desc = "Toggle spell" })
 
 -- save / quit
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Write" })

@@ -14,12 +14,26 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local function system_bg()
+	-- 1. Omarchy theme
+	local omarchy_theme = vim.fn.expand("~/.local/state/omarchy/current/theme/colors.toml")
+	local f = io.open(omarchy_theme, "r")
+	if f then
+		local content = f:read("*a")
+		f:close()
+		local mode = content:match('mode%s*=%s*["\']?(%w+)["\']?')
+		if mode == "dark" or mode == "light" then
+			return mode
+		end
+	end
+
+	-- 2. macOS appearance
 	if vim.fn.has("mac") == 1 then
 		local out = vim.fn.system("defaults read -g AppleInterfaceStyle 2>/dev/null")
-		if out:match("Dark") then
+		if vim.v.shell_error == 0 and out:match("Dark") then
 			return "dark"
 		end
 	end
+
 	return "light"
 end
 
@@ -120,6 +134,27 @@ require("lazy").setup({
 				group = group,
 				callback = function()
 					vim.defer_fn(try_enter, 200)
+				end,
+			})
+			vim.api.nvim_create_autocmd("User", {
+				group = group,
+				pattern = "GoyoEnter",
+				callback = function()
+					local bg = vim.o.background == "dark" and "#16141d" or "#f5f0e8"
+					vim.cmd("highlight NormalNC guibg=" .. bg)
+					vim.cmd("highlight EndOfBuffer guifg=" .. bg .. " guibg=" .. bg)
+					vim.cmd("highlight SignColumn guibg=" .. bg)
+					vim.cmd("highlight FoldColumn guibg=" .. bg)
+					vim.cmd("highlight StatusLine guibg=" .. bg .. " gui=NONE")
+					vim.cmd("highlight StatusLineNC guibg=" .. bg .. " gui=NONE")
+				end,
+			})
+
+			vim.api.nvim_create_autocmd("User", {
+				group = group,
+				pattern = "GoyoLeave",
+				callback = function()
+					vim.cmd.colorscheme("ember")
 				end,
 			})
 		end,

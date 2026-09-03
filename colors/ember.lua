@@ -6,31 +6,32 @@ local function hi(group, opts)
 end
 
 local dark = {
-	bg = "#131119",
-	bg_alt = "#1c1820",
-	bg_lift = "#2a2430",
-	fg = "#d5cec4",
-	fg_dim = "#9a9288",
-	fg_mute = "#6f6878",
-	line = "#4a4458",
-	amber = "#e8a849",
-	gold = "#d4a54c",
-	blue = "#7a9ec2",
-	teal = "#7aab9c",
-	green = "#8aab7c",
-	red = "#d46a6a",
-	rose = "#e88888",
-	select = "#3d2e1f",
-	cursor = "#e8a849",
+	bg = "#16141d",
+	bg_alt = "#1f1b26",
+	bg_lift = "#2b2535",
+	fg = "#e6dfd5",
+	fg_dim = "#a8a096",
+	fg_mute = "#726b7c",
+	line = "#3f3749",
+	amber = "#f0a842",
+	gold = "#e5b558",
+	blue = "#82aaff",
+	teal = "#7bc2ad",
+	green = "#9ecc88",
+	red = "#e06c75",
+	rose = "#f08d8d",
+	select = "#3a2c20",
+	cursor = "#f0a842",
+	code_bg = "#221d28",
 }
 
 local light = {
-	bg = "#f4efe8",
-	bg_alt = "#e8e0d4",
-	bg_lift = "#ddd3c4",
+	bg = "#f5f0e8",
+	bg_alt = "#eae1d5",
+	bg_lift = "#ded3c3",
 	fg = "#2c2622",
 	fg_dim = "#5a5248",
-	fg_mute = "#7a6f63",
+	fg_mute = "#887d70",
 	line = "#cfc3b2",
 	amber = "#c47a2a",
 	gold = "#8a641a",
@@ -41,6 +42,7 @@ local light = {
 	rose = "#c25050",
 	select = "#e4d4be",
 	cursor = "#c47a2a",
+	code_bg = "#ece4d6",
 }
 
 local c = vim.o.background == "light" and light or dark
@@ -151,12 +153,72 @@ hi("TelescopeSelection", { bg = c.select })
 hi("TelescopeMatching", { fg = c.amber, bold = true })
 hi("OilDir", { fg = c.blue, bold = true })
 hi("OilFile", { fg = c.fg })
+-- Markdown syntax (classic Vim)
 hi("markdownH1", { fg = c.amber, bold = true })
 hi("markdownH2", { fg = c.gold, bold = true })
 hi("markdownH3", { fg = c.blue, bold = true })
-hi("markdownCode", { fg = c.gold })
-hi("markdownCodeBlock", { fg = c.fg })
+hi("markdownH4", { fg = c.teal, bold = true })
+hi("markdownH5", { fg = c.green, bold = true })
+hi("markdownH6", { fg = c.rose, bold = true })
+hi("markdownHeadingDelimiter", { fg = c.fg_mute })
+hi("markdownCode", { fg = c.gold, bg = c.code_bg })
+hi("markdownCodeBlock", { fg = c.fg, bg = c.bg_alt })
+hi("markdownCodeDelimiter", { fg = c.fg_mute })
 hi("markdownLinkText", { fg = c.blue, underline = true })
+hi("markdownUrl", { fg = c.fg_mute })
+hi("markdownListMarker", { fg = c.amber })
+hi("markdownOrderedListMarker", { fg = c.amber })
+hi("markdownRule", { fg = c.line, bold = true })
+hi("markdownBlockquote", { fg = c.fg_dim, italic = true })
+hi("markdownBold", { fg = c.fg, bold = true })
+hi("markdownItalic", { fg = c.fg_dim, italic = true })
+
+-- Treesitter Markdown & Markup
+hi("@markup.heading", { bold = true })
+hi("@markup.heading.1", { fg = c.amber, bold = true })
+hi("@markup.heading.2", { fg = c.gold, bold = true })
+hi("@markup.heading.3", { fg = c.blue, bold = true })
+hi("@markup.heading.4", { fg = c.teal, bold = true })
+hi("@markup.heading.5", { fg = c.green, bold = true })
+hi("@markup.heading.6", { fg = c.rose, bold = true })
+hi("@markup.heading.1.markdown", { fg = c.amber, bold = true })
+hi("@markup.heading.2.markdown", { fg = c.gold, bold = true })
+hi("@markup.heading.3.markdown", { fg = c.blue, bold = true })
+hi("@markup.heading.4.markdown", { fg = c.teal, bold = true })
+hi("@markup.heading.5.markdown", { fg = c.green, bold = true })
+hi("@markup.heading.6.markdown", { fg = c.rose, bold = true })
+hi("@markup.heading.marker", { fg = c.fg_mute })
+
+hi("@markup.strong", { fg = c.fg, bold = true })
+hi("@markup.italic", { fg = c.fg_dim, italic = true })
+hi("@markup.strikethrough", { fg = c.fg_mute, strikethrough = true })
+
+hi("@markup.raw", { fg = c.gold, bg = c.code_bg })
+hi("@markup.raw.markdown_inline", { fg = c.gold, bg = c.code_bg })
+hi("@markup.raw.block.markdown", { fg = c.fg, bg = c.bg_alt })
+hi("@markup.raw.delimiter.markdown", { fg = c.fg_mute })
+
+hi("@markup.link", { fg = c.blue })
+hi("@markup.link.label", { fg = c.blue, underline = true })
+hi("@markup.link.label.markdown_inline", { fg = c.blue, underline = true })
+hi("@markup.link.url", { fg = c.fg_mute, underline = false })
+
+hi("@markup.list", { fg = c.amber })
+hi("@markup.list.markdown", { fg = c.amber })
+hi("@markup.list.checked", { fg = c.green, bold = true })
+hi("@markup.list.unchecked", { fg = c.fg_mute })
+
+hi("@markup.quote", { fg = c.fg_dim, italic = true })
+hi("@markup.quote.markdown", { fg = c.fg_dim, italic = true })
+
+hi("@markup.thematic_break", { fg = c.line, bold = true })
+hi("@markup.thematic_break.markdown", { fg = c.line, bold = true })
+
+hi("@punctuation.special.markdown", { fg = c.fg_mute })
+hi("@punctuation.delimiter.markdown", { fg = c.fg_mute })
+hi("@punctuation.bracket.markdown_inline", { fg = c.fg_mute })
+
+-- General Treesitter links
 hi("@comment", { link = "Comment" })
 hi("@keyword", { link = "Keyword" })
 hi("@function", { link = "Function" })
@@ -166,3 +228,6 @@ hi("@type", { link = "Type" })
 hi("@variable", { fg = c.teal })
 hi("@constant", { link = "Constant" })
 hi("@punctuation", { link = "Delimiter" })
+
+-- Distraction-free writing (Goyo)
+hi("GoyoBackground", { fg = c.fg, bg = c.bg })

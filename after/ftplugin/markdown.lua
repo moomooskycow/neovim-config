@@ -16,11 +16,92 @@ opt.conceallevel = 0
 opt.concealcursor = ""
 opt.textwidth = 0
 opt.colorcolumn = ""
-opt.foldenable = false
+opt.foldenable = true
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.MarkdownFrontmatterFold(v:lnum)"
+opt.foldlevel = 0
+opt.foldminlines = 0
+opt.foldtext = [['---']]
+opt.foldcolumn = "0"
 opt.formatoptions:remove({ "t", "c" })
 opt.statusline = "  %f %m  %=%{wordcount().words} words   %l:%c  "
 
 vim.bo.commentstring = "<!-- %s -->"
+
+-- Fold the opening YAML fence so writing starts at the title.
+-- File stays raw (no conceal). za on the fold line opens the block.
+local function frontmatter_end()
+	local lines = vim.api.nvim_buf_get_lines(0, 0, 40, false)
+	if lines[1] ~= "---" then
+		return 0
+	end
+	for i = 2, #lines do
+		if lines[i] == "---" then
+			return i
+		end
+	end
+	return 0
+end
+
+function MarkdownFrontmatterFold(lnum)
+	local last = vim.b.md_fm_end
+	if last == nil then
+		last = frontmatter_end()
+		vim.b.md_fm_end = last
+	end
+	if last > 0 and lnum <= last then
+		return "1"
+	end
+	return "0"
+end
+
+local function apply_frontmatter_fold()
+	vim.b.md_fm_end = nil
+	vim.opt_local.foldmethod = "expr"
+	vim.opt_local.foldexpr = "v:lua.MarkdownFrontmatterFold(v:lnum)"
+	vim.opt_local.foldenable = true
+	vim.opt_local.foldlevel = 0
+	vim.opt_local.foldminlines = 0
+	vim.opt_local.foldtext = [['---']]
+	vim.opt_local.foldcolumn = "0"
+	local last = frontmatter_end()
+	vim.b.md_fm_end = last
+	if last > 0 and vim.api.nvim_win_get_cursor(0)[1] == 1 then
+		local target = last + 1
+		local count = vim.api.nvim_buf_line_count(0)
+		while target <= count do
+			local line = vim.api.nvim_buf_get_lines(0, target - 1, target, false)[1]
+			if line ~= "" then
+				break
+			end
+			target = target + 1
+		end
+		if target <= count then
+			vim.api.nvim_win_set_cursor(0, { target, 0 })
+		end
+	end
+end
+
+apply_frontmatter_fold()
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "TextChangedI" }, {
+	buffer = 0,
+	callback = function()
+		vim.b.md_fm_end = nil
+	end,
+})
+
+if not vim.g.md_fm_goyo_hook then
+	vim.g.md_fm_goyo_hook = true
+	vim.api.nvim_create_autocmd("User", {
+		pattern = "GoyoEnter",
+		callback = function()
+			if vim.bo.filetype == "markdown" then
+				apply_frontmatter_fold()
+			end
+		end,
+	})
+end
 
 -- Table formatter
 vim.api.nvim_buf_create_user_command(0, "MDTableFormat", function()

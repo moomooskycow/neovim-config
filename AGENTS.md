@@ -5,14 +5,14 @@ Markdown-only writing kit. Raw view, Ember light default, Goyo auto.
 ## Commands
 - **Plugins**: lazy.nvim (`:Lazy`)
 - **Treesitter**: markdown, markdown_inline, yaml, html, lua (main branch, 0.12 compat)
-- **Render**: none — conceallevel=0, showbreak="", list=false
+- **Render**: none — conceallevel=0, showbreak="", list=false. YAML frontmatter folds closed on open (za to peek).
 
 ## Style
 - Lua: tabs, ~100 cols, snake_case
 - Modules: lua/user/* — keep minimal
 - Keymaps: vim.keymap.set() silent/noremap
 - Theme: Ember / Ember Dawn (colors/ember.lua); system dark detection via defaults read; toggle <leader>th
-- Goyo: width 80, linenr 0, auto-enter on markdown (FileType + BufReadPost *.md + VimEnter), toggle <leader>z
+- Goyo: width 80, linenr 0, auto-enter on markdown (FileType + BufReadPost *.md + VimEnter), toggle <leader>z. Re-applies frontmatter fold on GoyoEnter.
 
 ## Layout
 - init.lua — loader

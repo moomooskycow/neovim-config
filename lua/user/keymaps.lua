@@ -67,12 +67,6 @@ map("n", "<leader>ss", function()
 	vim.notify("Spell: " .. (vim.opt_local.spell:get() and "on" or "off"), vim.log.levels.INFO)
 end, { desc = "Toggle spell" })
 
--- markdown helpers (raw)
-map("n", "<leader>mt", "<cmd>MDTaskToggle<CR>", { desc = "Toggle checkbox" })
-map("n", "<leader>mf", "<cmd>MDTableFormat<CR>", { desc = "Format table" })
-map("n", "]]", "<cmd>MDNextHeading<CR>", { desc = "Next heading" })
-map("n", "[[", "<cmd>MDPrevHeading<CR>", { desc = "Prev heading" })
-
 -- save / quit
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Write" })
 map("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit" })

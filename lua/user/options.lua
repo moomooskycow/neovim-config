@@ -63,7 +63,7 @@ opt.foldenable = false
 opt.foldmethod = "manual"
 opt.foldlevelstart = 99
 
-opt.statusline = " %f %m  %=%{get(b:,'md_words','')}w  %l:%c "
+opt.statusline = " %f %m  %=%l:%c "
 
 -- disable netrw (oil)
 vim.g.loaded_netrw = 1
